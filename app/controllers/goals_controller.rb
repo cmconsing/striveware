@@ -1,5 +1,7 @@
 class GoalsController < ApplicationController
   before_action :set_goal, only: [:show, :edit, :update, :destroy]
+  before_action :correct_user, only: [:edit, :update, :destroy]
+  before_action :authenticate_user!, except: [:index, :show]
 
   # GET /goals
   def index
@@ -12,7 +14,7 @@ class GoalsController < ApplicationController
 
   # GET /goals/new
   def new
-    @goal = Goal.new
+    @goal = current_user.goals.build
   end
 
   # GET /goals/1/edit
@@ -21,7 +23,7 @@ class GoalsController < ApplicationController
 
   # POST /goals
   def create
-    @goal = Goal.new(goal_params)
+    @goal = current_user.goals.build(goal_params)
     if @goal.save
       redirect_to @goal, notice: 'Goal was successfully created.'
     else
@@ -48,6 +50,11 @@ class GoalsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_goal
       @goal = Goal.find(params[:id])
+    end
+
+    def correct_user
+      @goal = current_user.goals.find_by(id: params[:id])
+      redirect_to goals_path, notice: "Not authorized to edit this goal" if @goal.nil?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
