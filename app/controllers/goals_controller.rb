@@ -2,13 +2,11 @@ class GoalsController < ApplicationController
   before_action :set_goal, only: [:show, :edit, :update, :destroy]
 
   # GET /goals
-  # GET /goals.json
   def index
     @goals = Goal.all
   end
 
   # GET /goals/1
-  # GET /goals/1.json
   def show
   end
 
@@ -22,43 +20,28 @@ class GoalsController < ApplicationController
   end
 
   # POST /goals
-  # POST /goals.json
   def create
     @goal = Goal.new(goal_params)
-
-    respond_to do |format|
-      if @goal.save
-        format.html { redirect_to @goal, notice: 'Goal was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @goal }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @goal.errors, status: :unprocessable_entity }
-      end
+    if @goal.save
+      redirect_to @goal, notice: 'Goal was successfully created.'
+    else
+      render action: 'new'
     end
   end
 
   # PATCH/PUT /goals/1
-  # PATCH/PUT /goals/1.json
   def update
-    respond_to do |format|
-      if @goal.update(goal_params)
-        format.html { redirect_to @goal, notice: 'Goal was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @goal.errors, status: :unprocessable_entity }
-      end
+    if @goal.update(goal_params)
+      redirect_to @goal, notice: 'Goal was successfully updated.'
+    else
+      render action: 'edit'
     end
   end
 
   # DELETE /goals/1
-  # DELETE /goals/1.json
   def destroy
     @goal.destroy
-    respond_to do |format|
-      format.html { redirect_to goals_url }
-      format.json { head :no_content }
-    end
+    redirect_to goals_url
   end
 
   private
